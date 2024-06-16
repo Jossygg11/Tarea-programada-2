@@ -1,0 +1,87 @@
+---
+title: "Tarea Programada 2"
+author: "Joselyn Godinez Grijalba"
+date: "2024-06-16"
+output: html_document
+---
+
+```{r}
+library(dplyr)
+library(knitr)
+library(ggplot2)
+attach(data)
+```
+
+```{r}
+data <- mtcars
+```
+
+```{r}
+mostrar_pag <- function(df, num_pag, filas_por_pag = 6) {
+                 inicio <- (num_pag - 1) * filas_por_pag + 1
+                 fin <- min(inicio + filas_por_pag - 1, nrow(df))
+                 pagina <- df[inicio:fin, ]
+                 return(pagina)
+}
+```
+
+
+```{r}
+
+total_filas <- nrow(data)
+filas_por_pagina <- 6
+num_paginas <- (total_filas %/% filas_por_pagina) + ifelse(total_filas %% filas_por_pagina > 0, 1, 0)
+
+```
+
+```{r}
+for (i in 1:num_paginas) {
+  cat(paste0("### Página ", i, "\n"))
+  print(kable(mostrar_pag(data, i), format = "simple"))
+  cat("\n\n")
+}
+
+mostrar_pag
+```
+
+```{r}
+str(data)
+summary(data)
+```
+
+```{r}
+hist(mpg,
+     main = "Disribución de millas por galón",
+     xlab = "Millas por galón",
+     ylab = "Valor")
+```
+
+```{r}
+boxplot(mpg, cyl)
+```
+```{r}
+
+ggplot(mtcars, aes(x = hp, y = mpg)) +
+  geom_point(color = "red") +
+  labs(x = "Caballos de fuerza ",
+       y = "Millas por galón ",  
+  title = "Relación entre Caballos de fuerza y Millas por galón")
+```
+
+
+
+```{r}
+conteo_cyl <- mtcars %>%
+  count(cyl) %>%
+  arrange(desc(n)) 
+conteo_cyl$cyl <- factor(conteo_cyl$cyl, levels = conteo_cyl$cyl)
+```
+
+```{r}
+ggplot(conteo_cyl, aes(x = factor(cyl), y = n)) +
+  geom_bar(stat = "identity", fill = "pink") +
+  labs(x = "Número de cilindros", y = "Número de automóviles",
+  title = "Distribución de automóviles por categoría de cilindros",
+  )
+```
+   m
